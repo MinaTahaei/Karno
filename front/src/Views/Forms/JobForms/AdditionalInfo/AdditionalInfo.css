@@ -1,0 +1,15 @@
+.containerA {
+  position: relative;
+  bottom: 100px;
+  left: 60px;
+  
+}
+
+.containerA input {
+  height: 36px;
+  padding: 0px 14px;
+}
+.ACol {
+  bottom:60px;
+  right: 120px;
+}

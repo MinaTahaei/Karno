@@ -1,0 +1,149 @@
+/* eslint-disable */
+import React from 'react'
+import HRPanel from '../../../Components/HR Panel/HRPanel.js'
+import { Widget, WidgetContainer } from '@duik/widget'
+import { makeStyles } from '@material-ui/core/styles'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import Typography from '@material-ui/core/Typography'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import { Container, Row, Col } from 'reactstrap'
+import './Candidates.css'
+const fetch = require('node-fetch')
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      width: '100%'
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(20),
+      fontWeight: theme.typography.fontWeightRegular,
+      color: 'black',
+      fontFamily: 'IranSans'
+    },
+    Texts: {
+      fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightRegular,
+      color: 'black',
+      fontFamily: 'IranSans'
+    },
+    TextHeaders: {
+      fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightRegular,
+      color: 'green',
+      fontFamily: 'IranSans'
+    }
+  
+  }))
+
+  let LoginToken = localStorage.getItem('LoginToken')
+  const headers = {
+    Authorization: 'Token' + ' ' +localStorage.getItem('LoginToken')
+  }
+  console.log(LoginToken)
+  function fetchJSON (url, options) {
+    return fetch(url, options)
+      .then(r => {
+        if (!r.ok) {
+          throw new Error('HTTP error ' + r.status)
+        }
+        return r.json()
+      })
+  }
+
+  function useCandidates () {
+    const [jobs, setJobs] = React.useState([])
+    const [candidates, setCandidates] = React.useState({})
+
+    React.useEffect(() => {
+        fetchJSON('/api/people/candidates-per-company', { headers: headers })
+          .then(setJobs)
+      }, [])
+    
+      React.useEffect(() => {
+        async function fetchCandidates () {
+          const cPromises = []
+          for (const job of jobs) {
+            for (const candidate of job.candidates) {
+              cPromises.push(fetchJSON(`/api/people/get-candidate/${candidate}`, { headers: headers })
+                .then((candidates) => {
+                  return { 
+                    [job.id]: candidates
+                   } 
+                }))
+            }
+          }
+          const dData = await Promise.all(cPromises)
+          setCandidates(prev => Object.assign({}, ...dData))
+        }
+        fetchCandidates()
+      }, [jobs])
+      return [jobs, candidates]
+  }
+
+  export default function Candidates () {
+      const classes = useStyles()
+      const [jobs, candidates] = useCandidates()
+      return (
+        <>
+          <HRPanel />
+          <WidgetContainer>
+            <Widget
+              padding style={{
+                fontFamily: 'IranSans',
+                textAlign: 'right',
+                fontSize: '14px',
+                height: '20px',
+                boxShadow: '1px 1px 1px 0px #888888',
+                backgroundColor: '#f3eaf7'
+              }}
+            >
+              <h3 style={{
+                position: 'relative',
+                bottom: '12px'
+              }}
+              >
+               مشاهده افراد کاندید شده برای شغل ها
+              </h3>
+            </Widget>
+          </WidgetContainer>
+          <div className='mainBox'>
+          {jobs.map(job => (
+                <>
+                <div className={classes.root} key={job.id}>
+                <ExpansionPanel style={{ backgroundColor: 'white' }}>
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls='panel1a-content'
+                    id='panel1a-header'
+                    style={{ backgroundColor: '#11ed7f' }}
+                  >
+                    <Typography style={{ position: 'relative', top: '5px' }} className={classes.heading}>Candidate #{candidates[job.id] && candidates[job.id].id} </Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Container className='CandidateContainer'>
+                      <Typography className={classes.TextHeaders}>
+                        <Row>
+                          <Col style={{ color: 'black' }}><p style={{ color: 'gray' }}>Title:</p> {job.title} </Col>
+                          <Col><p style={{ color: 'gray' }}>Company Name:</p>  {job.company_name} </Col>
+                          <Col style={{ color: 'black' }}><p style={{ color: 'gray' }}>Job Id:</p> {job.id} </Col>
+                        </Row>
+                        <br />
+                        <Row>
+                          {candidates[job.id] && <Col key={candidates[job.id].id}><p style ={{color:'gray'}}>First Name:</p> {candidates[job.id].first_name}</Col>}
+                          {candidates[job.id] && <Col key={candidates[job.id].id} style={{ color: 'black' }}><p style ={{color:'gray'}}>Last Name:</p> {candidates[job.id].last_name}</Col>}
+                          {candidates[job.id] && <Col key={candidates[job.id].id}><p style ={{color:'gray'}}>Email:</p> {candidates[job.id].email}</Col>}
+                        </Row>
+                      </Typography>
+                    </Container>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              </div>
+              <br />
+            </> 
+        ))}
+    </div>
+  </>
+   )
+}

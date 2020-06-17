@@ -1,0 +1,28 @@
+.buttons-container {
+    text-align: center;
+    position: relative;
+    bottom: 50px;
+    right:160px;
+    .next {
+        font-family: IranSans;
+        color: whitesmoke;
+        margin: 0 1rem;
+        width: 100px;
+        height: 30px;
+        padding: 4px;
+        background-color: #00c474;
+        border-radius: 3px;
+        border: 1px solid green;
+    }
+   .previous {
+    font-family: IranSans;
+    margin: 0 1rem;
+    width: 100px;
+    height: 30px;
+    padding: 4px;
+    background-color:#bdc0bf;
+    border-radius: 3px;
+    border: 1px solid grey;
+   }
+
+}

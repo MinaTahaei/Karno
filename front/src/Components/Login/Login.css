@@ -1,0 +1,86 @@
+
+.LoginPic{
+    background-color: #e6e8ea;
+    height: 100vh;
+}
+
+.LoginPicc {
+    position: relative;
+    padding-top: 70px;
+}
+.Col1
+{
+    padding-left: 0px;
+    padding-right: 3px;
+
+}
+.Col2 {
+    background-color: #faf7ff;
+    padding-left: 0px;
+    box-shadow: 8px 8px 20px 8px #7f3cbd;
+}
+.LoginBox {
+    position: relative;
+    top:140px;
+    left: 100px;
+}
+.LoginLogo {
+    position: relative;
+    left: 40px;
+}
+.LoginLogoo {
+    width: 50%;
+    position: relative;
+}
+.FormItems label{
+    position: relative;
+    display: block;
+    text-align: center;
+    font-family: IranSans ;  
+    color: gray;
+    font-size: 16px;
+}
+
+.LoginForm {
+    position: relative;
+    left: 50px;
+}
+
+.FormItems input[type = "email"],
+.FormItems input[type = "password"]{
+    border: none;
+    border-bottom: 2px solid #676767;
+    background: transparent;
+    outline: none;
+    height: 30px;
+    color:gray;
+    width: 50%;
+    transition: box-shadow 0.2s ease-in;
+}
+.FormItems input[type = "email"]:focus {
+    border-color:#ef6683;
+    
+}
+
+.FormItems input[type = "password"]:focus {
+   border-color:  #ef6683;
+}
+.FormItems input::-webkit-input-placeholder{
+    opacity: 1;
+    transition: opacity 0.25s ease-out;
+}
+.FormItems input[type = "submit"]{
+    position: relative;
+    left: 60px;
+    top: 20px;
+    border: none;
+    outline: none;
+    height:  45px;
+    width: 30%;
+    color: #fff;
+    font-size: 16px;
+    background: #5e6485;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: IranSans;
+}

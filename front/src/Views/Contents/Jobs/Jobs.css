@@ -1,0 +1,12 @@
+
+.mainBox {
+    width: 1100px;
+    height: 550px;
+    background-color: #ebebeb;
+    position: relative;
+    left: 80px;
+}
+.jobContainer {
+    position: relative;
+    left: 150px;
+}
