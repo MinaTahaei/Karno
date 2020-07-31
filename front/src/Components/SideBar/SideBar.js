@@ -8,7 +8,7 @@ import NavLink from '@duik/nav-link'
 import { IoIosAdd, IoIosUmbrella } from 'react-icons/io'
 import { AiFillDollarCircle, AiOutlineLike } from 'react-icons/ai'
 import { BsPerson } from 'react-icons/bs'
-import { FiPieChart, FiBook, FiMonitor } from 'react-icons/fi'
+import { FiPieChart, FiBook, FiMonitor, FiLogOut } from 'react-icons/fi'
 import { GiIceCube } from 'react-icons/gi'
 import Radium from 'radium'
 import{ BrowserRouter,Route } from 'react-router-dom'
@@ -151,6 +151,13 @@ class Sidebar extends Component {
             >
             بازخورد
             </NavLink>
+            <NavLink pill key='10' style={linkStyles.base} rightEl={<FiLogOut style={linkStyles.Icon} />} className={this.state.navActive === '10' ? 'active' :' ' }
+            onClick={() => this.setState({ navActive:'10' })} style={{fontFamily:'IranSans'}}
+            href="/logout"
+            >
+            خروج
+            </NavLink>
+
         </NavSection>
         {routes.map((route, index) => (
           <Route

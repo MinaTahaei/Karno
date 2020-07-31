@@ -8,7 +8,11 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import Typography from '@material-ui/core/Typography'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import IconButton from '@material-ui/core/IconButton'
 import { Container, Row, Col } from 'reactstrap'
+import axios from 'axios'
 import './Candidates.css'
 const fetch = require('node-fetch')
 
@@ -56,6 +60,11 @@ const useStyles = makeStyles((theme) => ({
     const [jobs, setJobs] = React.useState([])
     const [candidates, setCandidates] = React.useState({})
 
+    const deleteCandidate = (id) => {
+      console.log('DC fired 2')
+      setJobs(prevJobs => prevJobs.filter(job => candidates[job.id].id !== id))
+    }
+
     React.useEffect(() => {
         fetchJSON('/api/people/candidates-per-company', { headers: headers })
           .then(setJobs)
@@ -79,12 +88,24 @@ const useStyles = makeStyles((theme) => ({
         }
         fetchCandidates()
       }, [jobs])
-      return [jobs, candidates]
+      return [jobs, candidates, deleteCandidate]
   }
-
+  function DeleteCandidate (candidateid) {
+    console.log('DC fired 1')
+    console.log(candidateid)
+    return axios({
+      method: 'delete',
+      url: '/api/people/delete-candidate/' + candidateid,
+      headers: headers
+    })
+    .catch(error => {
+      console.log(error.response)
+    })
+  }
+  
   export default function Candidates () {
       const classes = useStyles()
-      const [jobs, candidates] = useCandidates()
+      const [jobs, candidates, deleteCandidate] = useCandidates()
       return (
         <>
           <HRPanel />
@@ -119,6 +140,19 @@ const useStyles = makeStyles((theme) => ({
                     id='panel1a-header'
                     style={{ backgroundColor: '#11ed7f' }}
                   >
+                    <FormControlLabel
+                    aria-label='Acknowledge'
+                    onClick={(event) => event.stopPropagation()}
+                    onFocus={(event) => event.stopPropagation()}
+                    control={
+                      <IconButton
+                        aria-label='delete' style={{ color: 'red' }} variant='outlined'
+                        onClick={async () => { await DeleteCandidate(candidates[job.id].id); deleteCandidate(candidates[job.id].id) }}
+                      >
+                        <DeleteOutlinedIcon />
+                      </IconButton>
+                    }
+                  />
                     <Typography style={{ position: 'relative', top: '5px' }} className={classes.heading}>Candidate #{candidates[job.id] && candidates[job.id].id} </Typography>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>

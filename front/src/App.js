@@ -10,6 +10,7 @@ import Finance from './Views/Contents/Finance.js'
 import Insurance from './Views/Contents/Insurance.js'
 import Jobs from './Views/Contents/Jobs/Jobs.js'
 import Management from './Views/Contents/Management.js'
+import LogOut from './Views/LogOut/LogOut.js'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 function App () {
@@ -27,6 +28,7 @@ function App () {
         <Route exact path='/insurance' component={Insurance} />
         <Route exact path='/jobs' component={Jobs} />
         <Route exact path='/management' component={Management} />
+        <Route exact path='/logout' component={LogOut} />
       </Switch>
     </Router>
     // <Login> </Login>

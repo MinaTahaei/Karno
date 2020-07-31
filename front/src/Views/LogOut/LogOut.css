@@ -1,0 +1,17 @@
+.LogOutDiv {
+ width: 100vh;
+ height: 100vh;
+}
+.LogOut {
+    width: 100vh;
+    height:50vh;
+    position: relative;
+    top: 150px;
+}
+.LogOutText {
+    position: relative;
+    left: 160px;
+    top: 150px;
+    font-size: 25px;
+    color: purple;
+}

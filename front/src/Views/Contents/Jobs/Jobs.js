@@ -15,6 +15,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { Container, Row, Col } from 'reactstrap'
 import { Modal, Button, Form } from 'react-bootstrap'
+import GetAppIcon from '@material-ui/icons/GetApp';
 import './Jobs.css'
 const fetch = require('node-fetch')
 
@@ -152,6 +153,7 @@ function DeleteJob (jobid) {
 }
 
 function EditJob (jobid) {
+  
   console.log('editjob fired 1')
   console.log(jobid)
  
@@ -159,23 +161,42 @@ function EditJob (jobid) {
     title: event.target.jobtitle.value,
     company_name: event.target.companyname.value,
     internal_code: event.target.internalcode.value,
-    department: event.target.department.value,
-    location: event.target.jlocation.value,
-    tags: event.target.tags.value.split(','),
     benefits: event.target.benefits.value,
     description: event.target.description.value,
     requirements: event.target.requirements.value
   }
-  //console.log(event.target.tags.value.split(','))
+ console.log(event.target.tags)
   return axios({
     method: 'put',
-    url: '/api/jobs/update-job/' + jobid,
+    url: '/api/jobs/update-job/' + jobid+'/',
     headers: headers,
     data: updateJob
   })
   .then(response => {
     console.log(response)
     alert('Job Updated Successfully!')
+  })
+  .catch(error => {
+    console.log(error.response)
+  })
+}
+
+function getJobExcel() {
+  console.log('test')
+  return axios({
+    method: 'get',
+    url: '/api/jobs/job-excel/',
+    headers: headers,
+    responseType: 'blob'
+  })
+  .then((response) =>
+  {
+   const url = window.URL.createObjectURL(new Blob([response.data]));
+   const link = document.createElement('a');
+   link.href = url;
+   link.setAttribute('download', 'file.xls');
+   document.body.appendChild(link);
+   link.click();
   })
   .catch(error => {
     console.log(error.response)
@@ -238,17 +259,17 @@ export default function Jobs () {
                     </Form.Group>
                     <Form.Group controlId='department'>
                     <Form.Label style={{ color: 'green' }}>Department :</Form.Label>
-                    <Form.Control type='textbox' defaultValue={job.department} name='department' disabled required placeholder='Enter Department' />
+                    <Form.Control type='textbox' defaultValue={departments[job.id] && departments[job.id].name } name='department' disabled required placeholder='Enter Department' />
                   </Form.Group>
                   </Col>
                 <Col lg={6}>
                   <Form.Group controlId='jlocation'>
                     <Form.Label style={{ color: 'green' }}>Location :</Form.Label>
-                    <Form.Control type='textbox' defaultValue={job.location} name='jlocation' disabled required placeholder='Enter Location' />
+                    <Form.Control type='textbox' defaultValue={locations[job.id] && locations[job.id].country} name='jlocation' disabled required placeholder='Enter Location' />
                   </Form.Group>
                   <Form.Group controlId='tags'>
                     <Form.Label style={{ color: 'green' }}>Tags:</Form.Label>
-                    <Form.Control type='textbox' defaultValue={job.tags} name='tags' disabled required placeholder='Enter tags' />
+                    <Form.Control type='textbox' defaultValue={tags[job.id] &&  tags[job.id].map(tag => tag.name).join(',')} name='tags' disabled required placeholder='Enter tags' />
                   </Form.Group>
                   <Form.Group controlId='benefits' >
                    <Form.Label style={{ color: 'green' }}>Benefits :</Form.Label>
@@ -286,6 +307,7 @@ export default function Jobs () {
                   id='panel1a-header'
                   style={{ backgroundColor: '#11ed7f' }}
                 >
+                
                   <FormControlLabel
                     aria-label='Acknowledge'
                     onClick={(event) => event.stopPropagation()}
@@ -299,6 +321,7 @@ export default function Jobs () {
                       </IconButton>
                     }
                   />
+
                   <Typography style={{ position: 'relative', top: '12px' }} className={classes.heading}>Job Opportunity #{job.id}</Typography>
                   <FormControlLabel
                     aria-label='Acknowledge'
@@ -310,6 +333,19 @@ export default function Jobs () {
                         onClick={handleShow}
                       >
                         <EditOutlinedIcon />
+                      </IconButton>
+                    }
+                  />
+                    <FormControlLabel
+                    aria-label='Acknowledge'
+                    onClick={(event) => event.stopPropagation()}
+                    onFocus={(event) => event.stopPropagation()}
+                    control={
+                      <IconButton
+                        aria-label='excel' style={{ color: '#b5002a', position: 'relative', left: '630px',bottom:'3px' }} variant='outlined' 
+                        onClick={async () => { await getJobExcel();}}
+                      >
+                        <GetAppIcon />
                       </IconButton>
                     }
                   />

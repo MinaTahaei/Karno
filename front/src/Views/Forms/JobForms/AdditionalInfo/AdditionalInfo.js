@@ -7,6 +7,10 @@ import './../../../../Components/Stepper/StepperButton.scss'
 import {AddLocModal} from './../../../../Components/PopUp/AddLocModal.js'
 import {AddDepModal} from './../../../../Components/PopUp/AddDepModal.js'
 import {AddTagModal} from './../../../../Components/PopUp/AddTagModal.js'
+import {DeleteDepModal} from './../../../../Components/PopUp/DeleteDepModal'
+import {DeleteLocModal} from './../../../../Components/PopUp/DeleteLocModal'
+import {DeleteTagModal} from './../../../../Components/PopUp/DeleteTagModal'
+
 import axios from 'axios'
 
 
@@ -29,26 +33,32 @@ export class AdditionalInfo extends Component {
     addModalLocShow: false,
     addModalDepShow: false,
     addModalTagShow:false,
+    deleteModalDepShow:false,
+    deleteModalLocShow:false,
+    deleteModalTagShow:false
   }
   refreshList() {
     axios.get('/api/jobs/list-locations/',{headers:headers}).then(res=>{
       this.setState({
         locations:res.data.map(Locations=>({label:[Locations.country,' ', Locations.region,' ',Locations.zipcode],value:Locations.id}))
       })
+    }).catch(error => {
+      console.log(error.response)
     })
     axios.get('/api/jobs/list-departments',{headers:headers}).then(resp=>{
       this.setState({
         departments:resp.data.map(departments=>({label:[departments.name,' ',departments.company_name],value:departments.id}))
-      })
+      }) 
+    }).catch(error => {
+      console.log(error.response)
     })
     axios.get('/api/jobs/list-tags',{headers:headers}).then(respo =>{
       this.setState({
         tagsList:respo.data.map(Tags=>({label: Tags.name, value: Tags.id}))
       })
+    }).catch(error => {
+      console.log(error.response)
     })
-  }
-  componentDidMount() {
-    this.refreshList()
   }
 
   continue = e => {
@@ -62,15 +72,28 @@ export class AdditionalInfo extends Component {
   };
 
  render() {
-    const {values, handleChange, handleDropDown} = this.props  
+    this.refreshList()
+    const {values, handleChange, handleDropDown} = this.props 
+    // add forums 
     let addModalLocClose = () => this.setState({addModalLocShow:false})
     let addModalDepClose = () => this.setState({addModalDepShow:false})
     let addModalTagClose = () => this.setState({addModalTagShow:false})
+
+    //delete forums
+    let deleteModalLocClose = () =>this.setState({deleteModalLocShow:false})
+    let deleteModalDepClose = () => this.setState({deleteModalDepShow:false})
+    let deleteModalTagClose = () =>this.setState({deleteModalTagShow:false})
     
+    //add refreshlist
     let addModalLocationAdded = () => this.refreshList()
     let addModalDepartmentAdded = () =>this.refreshList()
     let addModalTagAdded = () =>this.refreshList()
-    
+
+    //delete refresh list
+    let deleteModalLocationDeleted = () => this.refreshList()
+    let deleteModalDepartmentDeleted = () => this.refreshList()
+    let deleteModalTagDeleted = () => this.refreshList()
+
     return (
         <Container className='ContainerA'>
 
@@ -90,6 +113,7 @@ export class AdditionalInfo extends Component {
          fullWidth="true"
          id="outlined-basic" 
          variant="outlined"
+         style={{width:'112%'}}
          required
         />
          <br />
@@ -98,12 +122,24 @@ export class AdditionalInfo extends Component {
           <Col xs={10}>
             <Select placeholder='Select from pre-created Tags 'onChange={handleDropDown('Tags')} defaultValue={values.Tags} required isMulti options={this.state.tagsList}/>
           </Col>
-          <Col>
-         <Button style={{position:'relative',left:'150px', width:'130px'}} onClick={()=>this.setState({addModalTagShow: true})} color='success'>
+ 
+         <Col>
+          
+          <Button style={{position:'relative',left:'150px', width:'130px'}} onClick={()=>this.setState({addModalTagShow: true})} color='success'>
               New Tags
+          </Button>
+        
+           <AddTagModal show={this.state.addModalTagShow} onHide={addModalTagClose} onTagAdded={addModalTagAdded}/>
+        </Col> 
+
+        <Col>
+        <Button style={{position:'relative',left:'200px', width:'130px'}} onClick={()=>this.setState({deleteModalTagShow: true})} color='danger'>
+              Delete Tags
         </Button>
-        <AddTagModal show={this.state.addModalTagShow} onHide={addModalTagClose} onTagAdded={addModalTagAdded}/>
-          </Col>   
+        <DeleteTagModal show={this.state.deleteModalTagShow} onHide={deleteModalTagClose} onTagDeleted={deleteModalTagDeleted}/>
+        </Col> 
+
+
         </Row> 
         <br />
         <Row>
@@ -114,8 +150,17 @@ export class AdditionalInfo extends Component {
           <Button style={{position:'relative',left:'150px' }} onClick={()=>this.setState({addModalLocShow: true})} color='success'>
             New Locations
          </Button>
+
          <AddLocModal show={this.state.addModalLocShow} onHide={addModalLocClose} onLocationAdded={addModalLocationAdded} /> 
-          </Col>
+         </Col>
+
+        <Col>
+           <Button style={{position:'relative',left:'200px', width:'130px'}} onClick={()=>this.setState({deleteModalLocShow: true})} color='danger'>
+              Delete Locations
+          </Button>
+          <DeleteLocModal show={this.state.deleteModalLocShow} onHide={deleteModalLocClose} onLocationDeleted={deleteModalLocationDeleted} />
+        </Col>
+
         </Row>    
         <br />
         <Row>
@@ -126,8 +171,16 @@ export class AdditionalInfo extends Component {
           <Button style={{position:'relative',left:'150px', width:'130px'}} onClick={()=>this.setState({addModalDepShow: true})} color='success'>
             New Department
           </Button>
+
           <AddDepModal show={this.state.addModalDepShow} onHide={addModalDepClose} onDepartmentAdded={addModalDepartmentAdded} />
         </Col>
+        <Col>
+          <Button style={{position:'relative',left:'200px', width:'130px'}} onClick={()=>this.setState({deleteModalDepShow: true})} color='danger'>
+              Delete Departments
+          </Button>
+          <DeleteDepModal show={this.state.deleteModalDepShow} onHide={deleteModalDepClose} onDepartmentDeleted={deleteModalDepartmentDeleted}/>
+        </Col>
+
         </Row> 
        <br />
       <br />

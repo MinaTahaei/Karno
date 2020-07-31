@@ -13,7 +13,7 @@ export class AddLocModal extends Component {
 
     const headers = {
       'content-type': 'application/json',
-      Authorization: 'Token 9135a4e42531bf1d2cabbf66ff9e18a6af61e774'
+      Authorization: 'Token 6716d7ed8c3ea4166572743eb9d07b2b713605c6'
     }
 
     const location = {

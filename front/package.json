@@ -1,6 +1,6 @@
 {
   "name": "front",
-  "proxy": "http://172.17.3.123/",
+  "proxy": "http://51.195.53.36/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

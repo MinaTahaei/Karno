@@ -2,6 +2,10 @@ import React from 'react'
 
 export const routes = [
   {
+    path: '/logout',
+    exact: true
+  },
+  {
     path: '/dashboard',
     exact: true
   },
