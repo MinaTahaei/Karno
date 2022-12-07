@@ -23,7 +23,7 @@
     "focus-trap-react": "^6.0.0",
     "formik": "^2.1.4",
     "node-fetch": "^3.2.10",
-    "node-sass": "^7.0.0",
+    "node-sass": "^7.0.3",
     "perfect-scrollbar": "^1.5.0",
     "prop-types": "^15.7.2",
     "radium": "^0.26.0",
