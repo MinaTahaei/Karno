@@ -1,5 +1,5 @@
 asgiref==3.2.3
-Django==3.2.24
+Django==3.2.25
 pkg-resources==0.0.0
 psycopg2==2.8.4
 pytz==2019.3
